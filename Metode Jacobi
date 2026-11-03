@@ -1,0 +1,42 @@
+import numpy as np
+A = np.array([[6.0, -2.0, 3.0], [-2.0, -3.0, 0.0], [1.0, 1.0, -4.0]])
+
+b = np.array([12.0, 12.0, 8.0])
+
+def jacobi(A, b, tol=1e-6, max_iter=15):
+  n = len(b)
+  x = np.zeros(n)  
+
+  print(f"{'Iterasi':<8} {'x':<12} {'y':<12} {'z':<12} {'Galat':<15}")
+  print("-" * 55)
+  print(f"{0:<8} {x[0]:<12.6f} {x[1]:<12.6f} {x[2]:<12.6f} {'-':<15}")
+
+  for k in range(1, max_iter + 1):
+    x_baru = np.zeros(n)
+    for i in range(n):
+      sumber = sum(A[i, j] * x[j] for j in range(n) if j != i)
+      x_baru[i] = (b[i] - sumber) / A[i, i]
+
+    galat = np.linalg.norm(x_baru - x, ord=np.inf)
+    print(
+        f"{k:<8} {x_baru[0]:<12.6f} {x_baru[1]:<12.6f} {x_baru[2]:<12.6f}"
+        f" {galat:<15.6f}"
+    )
+
+    if galat < tol:
+      print("-" * 55)
+      print(f"Konvergen pada iterasi ke-{k}!")
+      return x_baru
+
+    x = x_baru
+
+  print("-" * 55)
+  print("Mencapai batas maksimum iterasi.")
+  return x
+
+hasil_jacobi = jacobi(A, b)
+
+print("\n=== Hasil Solusi Akhir Jacobi ===")
+print(f"x = {hasil_jacobi[0]:.6f}")
+print(f"y = {hasil_jacobi[1]:.6f}")
+print(f"z = {hasil_jacobi[2]:.6f}")
